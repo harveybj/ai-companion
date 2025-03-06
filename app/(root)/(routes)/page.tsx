@@ -5,15 +5,14 @@ import { Companions } from '@/components/companions';
 
 interface RootPageProps {
   // Add any props you expect to pass to the RootPage component here
-  searchParams: {
+  searchParams: Promise<{
     categoryId: string;
     name: string;
-  }
+  }>
 }
 
-const RootPage = async ({
-  searchParams
-}: RootPageProps ) => {
+const RootPage = async (props: RootPageProps) => {
+  const searchParams = await props.searchParams;
 
   const data = await prismadb.companion.findMany({
     where: {
