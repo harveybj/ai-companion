@@ -2,12 +2,13 @@ import prismadb from "@/lib/prismadb";
 import { CompanionForm } from "./components/companion-form";
 
 interface CompanionIdPageProps {
-  params: {
+  params: Promise<{
     companionId: string;
-  };
+  }>;
 }
 
-const CompanionIdPage = async ({ params }: CompanionIdPageProps) => {
+const CompanionIdPage = async (props: CompanionIdPageProps) => {
+  const params = await props.params;
   // TODO: Check subscription
 
   const companion = await prismadb.companion.findUnique({

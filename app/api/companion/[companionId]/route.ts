@@ -2,9 +2,8 @@ import prismadb from "@/lib/prismadb";
 import { currentUser } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server"
 
-export async function PATCH(
-    req: Request,
-    {params}: {params: { companionId: string }}) {
+export async function PATCH(req: Request, props: {params: Promise<{ companionId: string }>}) {
+    const params = await props.params;
     try {
         const body = await req.json();
         const user = await currentUser();
