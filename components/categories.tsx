@@ -46,7 +46,7 @@ export const Categories = ({ data }: CategoryProps) => {
                     hover:opacity-75
                     transition
                     `,
-          !categoryId ? "bg-primary/25" : "br-primary/10"
+          !categoryId ? "bg-primary/25" : "bg-primary/10"
         )}
       >
         {" "}
