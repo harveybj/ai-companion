@@ -6,45 +6,44 @@ import { redirect } from "next/navigation";
 import { ChatClient } from "./components/client";
 
 interface ChatIdPageProps {
-    params: {
+    params: Promise<{
         chatId: string;
-    }
+    }>
 }
 
-const ChatIdPage = async ({
-    params
-}: ChatIdPageProps) => {
+const ChatIdPage = async (props: ChatIdPageProps) => {
+    const params = await props.params;
     const { userId, redirectToSignIn } = await auth();
 
     if (!userId) {
         return redirectToSignIn()
     }
 
-const companion = await prismadb.companion.findUnique({
-        where: {
-            id: params.chatId
-        },
-        include: {
-            messages: {
-                orderBy: {
-                    createdAt: 'asc'
-                },
-                 where:{
-                    userId
-                 }
+    const companion = await prismadb.companion.findUnique({
+            where: {
+                id: params.chatId
             },
-            _count: {
-                select: {
-                    messages: true
+            include: {
+                messages: {
+                    orderBy: {
+                        createdAt: 'asc'
+                    },
+                     where:{
+                        userId
+                     }
+                },
+                _count: {
+                    select: {
+                        messages: true
+                    }
                 }
             }
-        }
-    });
+        });
 
     if (!companion) {
         return redirect("/")
     }
-    
+
     return (
        <ChatClient companion={companion} />
     )
