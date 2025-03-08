@@ -25,7 +25,8 @@ export async function PATCH(req: Request, props: {params: Promise<{ companionId:
 
         const companion = await prismadb.companion.update({
             where: {
-                id: params.companionId
+                id: params.companionId,
+                userId: user.id
             },
             data: {
                 categoryId,
@@ -62,7 +63,7 @@ export async function DELETE(request: Request, props: {params: Promise<{ compani
         });
 
         return NextResponse.json(companion);
-        
+
     } catch(error) {
         console.log("[COMPANION_DELETE]", error)
         return new NextResponse("Internal Error", { status: 500 });
