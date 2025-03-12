@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import { Companion } from "@prisma/client";
 import { ChatMessage, ChatMessageProps } from "@/components/chat-message";
@@ -13,51 +13,46 @@ interface ChatMessagesProps {
 export const ChatMessages = ({
   messages = [],
   isLoading,
-  companion
+  companion,
 }: ChatMessagesProps) => {
-
   const scrollRef = useRef<HTMLDivElement>(null);
 
-  const [fakeLoading, setFakeLoading] = useState(messages.length === 0 ? true : false);
+  const [fakeLoading, setFakeLoading] = useState(
+    messages.length === 0 ? true : false
+  );
 
   useEffect(() => {
     const timeout = setTimeout(() => {
-      setFakeLoading(false)
-    }, 1000)
-    
+      setFakeLoading(false);
+    }, 1000);
+
     return () => {
-      clearTimeout(timeout)
-    }
+      clearTimeout(timeout);
+    };
   }, []);
 
   // Used to scroll to the last message
   useEffect(() => {
     scrollRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages.length])
-  
+  }, [messages.length]);
 
   return (
     <div className="flex-1 overflow-y-auto pr-4">
       <ChatMessage
-        isLoading = {fakeLoading}
+        isLoading={fakeLoading}
         src={companion.src}
         role="system"
         content={`Hello, I am ${companion.name}, ${companion.description}`}
       />
-      {messages.map((message) => (
+      {messages.map((message, index) => (
         <ChatMessage
           role={message.role}
-          key={message.content}
+          key={`message-${index}`}
           content={message.content}
-          src={companion.src} />
-      ))}
-      {isLoading && (
-        <ChatMessage
-          isLoading={isLoading}
-          src={companion.src}
-          role="system"
+          src={message.role === "system" ? companion.src : message.src}
         />
-      )}
+      ))}
+      {isLoading && <ChatMessage role="system" src={companion.src} isLoading />}
       {/* 
       This is used so the window is automatically sent to the 
       last div. It is using useRef from React and it starts working
@@ -65,5 +60,5 @@ export const ChatMessages = ({
       */}
       <div ref={scrollRef} />
     </div>
-  )
-}
+  );
+};

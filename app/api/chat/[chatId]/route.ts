@@ -12,10 +12,8 @@ dotenv.config({ path: `.env` });
 
 //export const runtime = "edge"; // Optional: Keep if you want edge runtime
 
-export async function POST(
-  request: Request,
-  { params }: { params: { chatId: string } }
-) {
+export async function POST(request: Request, props: { params: { chatId: string } }) {
+  const params = await props.params;
   try {
     const { prompt } = await request.json();
     const user = await currentUser();
